@@ -51,12 +51,14 @@ CFG Pin Settig
 float vScale = 7.83;  // actual VBUS/VBUS_I
 float vi_0A = 2.36;  // VI_I(V) @ 0A output
 float vi_2A = 2.76;  // VI_I(V) @ 2A output
+float vi_0cal = vi_0A;
+float   vbus_i_temp[20];  // for moving average
 
 uint8_t PDO = 0;
 bool OE = false;
 
 uint32_t updateTime = 0;       // time for next update
-uint8_t interval = 200;  // Update interval
+uint8_t interval = 100;  // Update interval
 
 /*
 #define CURRENT_100MA  (0x01 << 0)
@@ -105,6 +107,13 @@ void setup(void) {
   drawBtnMenu("DOWN", "ON", "UP");
   M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
 
+  for(int i = 0; i < 20; i++){
+    vbus_i_temp[i] = readVoltage(analogRead(VI_I));
+    delay(20);
+  }
+
+  vi_0cal = averageVI();
+
   updateTime = millis(); // Next update time
 }
 
@@ -120,8 +129,14 @@ void loop() {
     updateTime = millis() + interval; // Update interval
 
     vbus_v = readVoltage(analogRead(VBUS_I)) * vScale;  // read data from CH1
-    vbus_i = (readVoltage(analogRead(VI_I)) - vi_0A) / ((vi_2A - vi_0A) / 2);    // read data from CH2
-
+//    vbus_i = (readVoltage(analogRead(VI_I)) - vi_0A) / ((vi_2A - vi_0A) / 2);    // read data from CH2
+    // 20 moving averages
+    for(int i = 19; i > 0; i--){
+      vbus_i_temp[i] = vbus_i_temp[i - 1];
+    }
+    vbus_i_temp[0]= readVoltage(analogRead(VI_I));    // read data from CH2
+    vbus_i = (averageVI() - vi_0cal) / ((vi_2A - vi_0A) / 2);
+    
     #ifndef CALIBRATE
       dtostrf(vbus_v,4,1,buf1);
       drawText("Vout = " + (String)buf1 + " V    ", 1, 0);
@@ -184,7 +199,8 @@ void loop() {
     }else{
       digitalWrite(VBUSEN_O, LOW); 
       Serial.println("Output Disabled");
-    }
+      vi_0cal = averageVI();
+     }
     
     drawText("PG", 0, 3);
     if(vbus_v >= 3){
@@ -272,4 +288,12 @@ float readVoltage(uint16_t Vread){
     Vdc = 3.2;
   }
   return Vdc;
+}
+
+float averageVI(){
+  float vi_sum = 0;
+  for(int i = 0; i < 20; i++){
+    vi_sum = vi_sum + vbus_i_temp[i];
+  }
+  return vi_sum / 20;
 }
