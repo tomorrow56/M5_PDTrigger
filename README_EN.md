@@ -1,5 +1,7 @@
 # PD Trigger Module for M5Stack
 
+**[日本語版READMEはこちら](README.md)**
+
 ## Overview
 
 This module is an expansion module for M5Stack Core/Core2 that supplies power from USB PD (Power Delivery) compatible power sources and monitors/controls current. By connecting to the M-Bus, it enables power supply and current monitoring from USB PD compatible power sources.
@@ -99,6 +101,10 @@ Sample code for M5Stack Basic/Core. Implements the following features:
 - Button B: Toggle output ON/OFF
 - Button C: Increase PDO voltage
 
+**M5Stack Basic Operation Example**:
+
+![Sample_basic](image/Sample_basic.jpg)
+
 ### M5Stack Core2 Sample
 
 Sample code for M5Stack Core2. Same features as Basic version but with different pin configuration:
@@ -113,6 +119,10 @@ Sample code for M5Stack Core2. Same features as Basic version but with different
 #define VBUSEN_O        32    // Output enable
 #define PG_I            27    // Power Good input
 ```
+
+**M5Stack Core2 Operation Example**:
+
+![Sample_core2](image/Sample_core2.jpg)
 
 **Calibration**:
 
@@ -138,7 +148,3 @@ float vi_2A = 2.85;      // Current sensor output voltage at 2A
 ## License
 
 This project is published under the MIT License. See the LICENSE file for details.
-
----
-
-**[日本語版READMEはこちら](README.md)**

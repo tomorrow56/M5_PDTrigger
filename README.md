@@ -101,6 +101,10 @@ M5Stack Basic/Core用のサンプルコードです。以下の機能を実装�
 - ボタンB: 出力ON/OFF切り替え
 - ボタンC: PDO電圧を上げる
 
+**M5Stack Basicの動作例**:
+
+![Sample_basic](image/Sample_basic.jpg)
+
 ### M5Stack Core2用サンプル
 
 M5Stack Core2用のサンプルコードです。Basic版と同様の機能ですが、ピン配置が異なります：
@@ -115,6 +119,9 @@ M5Stack Core2用のサンプルコードです。Basic版と同様の機能で�
 #define VBUSEN_O        32    // 出力イネーブル
 #define PG_I            27    // Power Good入力
 ```
+**M5Stack Core2の動作例**:
+
+![Sample_core2](image/Sample_core2.jpg)
 
 **キャリブレーション**:
 
